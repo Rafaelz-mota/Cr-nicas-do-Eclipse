@@ -41,6 +41,101 @@ static func create_new(p_data: GameDataStore, p_name: String, p_class: String, p
 	return c
 
 
+const SAVE_VERSION := 1
+
+
+## Estado completo e serializável do personagem (base do salvamento local e,
+## no futuro, da persistência no servidor).
+func to_dict() -> Dictionary:
+	var inv: Array = []
+	for s in inventory.slots:
+		inv.append(s.to_dict())
+	var worn := {}
+	for slot in equipment.worn:
+		worn[slot] = equipment.worn[slot].to_dict()
+	return {
+		"version": SAVE_VERSION,
+		"name": char_name, "class_id": class_id, "clan_id": clan_id,
+		"level": level, "xp": xp, "gold": gold,
+		"free_points": free_points, "allocated": allocated.duplicate(),
+		"inventory": inv, "equipment": worn,
+		"quests_active": quest_log.active.duplicate(true),
+		"quests_completed": quest_log.completed.keys(),
+	}
+
+
+## Reconstrói o personagem validando contra os dados do jogo. Retorna null se o
+## salvamento for inválido (classe/clã inexistente). Itens desconhecidos são
+## descartados e valores fora do limite são ajustados.
+static func from_dict(p_data: GameDataStore, d: Dictionary) -> CharacterData:
+	var cid: String = str(d.get("class_id", ""))
+	var kid: String = str(d.get("clan_id", ""))
+	if not p_data.classes.has(cid) or not p_data.clans.has(kid):
+		return null
+	var c := CharacterData.new()
+	c.data = p_data
+	c.char_name = str(d.get("name", "Viajante"))
+	c.class_id = cid
+	c.clan_id = kid
+	c.xp_curve = XpCurve.from_balance(p_data.balance)
+	c.inventory = Inventory.new(p_data)
+	c.equipment = Equipment.new()
+	c.quest_log = QuestLog.new(p_data)
+
+	c.level = clampi(int(d.get("level", 1)), 1, c.xp_curve.max_level)
+	var need: int = c.xp_curve.xp_to_next(c.level)
+	c.xp = clampi(int(d.get("xp", 0)), 0, maxi(0, need - 1))
+	c.gold = maxi(0, int(d.get("gold", 0)))
+	c.free_points = maxi(0, int(d.get("free_points", 0)))
+	var alloc: Dictionary = d.get("allocated", {})
+	for a in CombatStats.ATTRIBUTES:
+		if alloc.has(a):
+			c.allocated[a] = maxi(0, int(alloc[a]))
+
+	for raw in d.get("inventory", []):
+		var inst := _restore_item(p_data, raw)
+		if inst != null:
+			c.inventory.add_instance(inst)
+	var worn: Dictionary = d.get("equipment", {})
+	for slot in worn:
+		var inst := _restore_item(p_data, worn[slot])
+		if inst == null or not Equipment.SLOTS.has(slot):
+			continue
+		if p_data.items[inst.item_id].get("slot", "") != slot:
+			continue
+		c.equipment.worn[slot] = inst
+
+	var qa: Dictionary = d.get("quests_active", {})
+	for qid in qa:
+		if not p_data.quests.has(qid):
+			continue
+		var n: int = (p_data.quests[qid].get("objectives", []) as Array).size()
+		var prog: Array = []
+		var saved: Array = qa[qid].get("progress", [])
+		for i in range(n):
+			var need_i: int = int(p_data.quests[qid]["objectives"][i].get("count", 1))
+			prog.append(clampi(int(saved[i]) if i < saved.size() else 0, 0, need_i))
+		c.quest_log.active[qid] = {"progress": prog}
+	for qid in d.get("quests_completed", []):
+		if p_data.quests.has(qid):
+			c.quest_log.completed[qid] = true
+	return c
+
+
+static func _restore_item(p_data: GameDataStore, raw: Variant) -> ItemInstance:
+	if typeof(raw) != TYPE_DICTIONARY:
+		return null
+	var inst := ItemInstance.from_dict(raw)
+	var def: Dictionary = p_data.items.get(inst.item_id, {})
+	if def.is_empty() or inst.uid == "":
+		return null
+	var max_stack: int = int(def.get("max_stack", 1)) if bool(def.get("stackable", false)) else 1
+	inst.count = clampi(inst.count, 1, max_stack)
+	inst.enhance = clampi(inst.enhance, 0, int(p_data.balance.get("enhancement", {}).get("max_level", 15)))
+	inst.durability = clampi(inst.durability, 0, int(def.get("durability_max", 0)))
+	return inst
+
+
 func allowed_weapon_types() -> Array:
 	return data.classes.get(class_id, {}).get("weapon_types", [])
 

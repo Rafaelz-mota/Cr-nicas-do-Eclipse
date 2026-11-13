@@ -12,6 +12,10 @@ O workflow `android-apk.yml` **foi executado no GitHub e gerou um APK debug** (~
 
 **O que NÃO foi verificado:** o APK nunca foi instalado nem aberto em um aparelho. Não se sabe ainda se abre, como ficam HUD/joystick no toque, nem o desempenho. Se algo falhar ao instalar ou abrir, envie o erro ou uma descrição/captura de tela.
 
+## Atualizando para uma versão nova
+
+Cada execução do workflow cria uma chave de assinatura de debug nova, então o Android **não aceita instalar por cima** da versão anterior ("app não instalado" / conflito). **Desinstale a versão antiga antes de instalar a nova.** Isso apaga os dados locais do app, incluindo o salvamento do personagem. Para atualizar sem perder o salvamento será preciso uma chave de assinatura fixa guardada em *Secrets* do GitHub (tarefa futura).
+
 ## Detalhes
 
 - APK **debug**, assinado com uma keystore criada na hora pelo workflow (não fica no repositório).

@@ -7,6 +7,7 @@ signal skill_pressed(slot: int)
 signal interact_pressed
 signal joystick_moved(vec: Vector2)
 signal character_chosen(class_id: String, clan_id: String)
+signal continue_chosen
 signal equip_requested(uid: String)
 signal use_requested(uid: String)
 signal enhance_requested(uid: String)
@@ -34,12 +35,12 @@ var select_panel: PanelContainer
 var _toast_tween: Tween
 
 
-func setup(p_data: GameDataStore) -> void:
+func setup(p_data: GameDataStore, p_has_save: bool = false) -> void:
 	data = p_data
 	_build_hud()
 	_build_inventory()
 	_build_dialog()
-	_build_select()
+	_build_select(p_has_save)
 
 
 func _build_hud() -> void:
@@ -89,10 +90,10 @@ func _build_hud() -> void:
 	joystick = TouchJoystick.new()
 	joystick.anchor_top = 1.0
 	joystick.anchor_bottom = 1.0
-	joystick.offset_left = 20
-	joystick.offset_top = -240
-	joystick.offset_right = 236
-	joystick.offset_bottom = -24
+	joystick.offset_left = 48
+	joystick.offset_top = -270
+	joystick.offset_right = 264
+	joystick.offset_bottom = -54
 	joystick.moved.connect(func(v): joystick_moved.emit(v))
 	root.add_child(joystick)
 
@@ -101,17 +102,18 @@ func _build_hud() -> void:
 	skills.anchor_right = 1.0
 	skills.anchor_top = 1.0
 	skills.anchor_bottom = 1.0
-	skills.offset_left = -520
-	skills.offset_right = -20
-	skills.offset_top = -150
-	skills.offset_bottom = -24
+	skills.offset_left = -720
+	skills.offset_right = -56
+	skills.offset_top = -210
+	skills.offset_bottom = -48
 	skills.alignment = BoxContainer.ALIGNMENT_END
-	skills.add_theme_constant_override("separation", 10)
+	skills.add_theme_constant_override("separation", 14)
 	skills.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(skills)
 	for i in range(4):
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(112, 112)
+		b.custom_minimum_size = Vector2(150, 150)
+		b.add_theme_font_size_override("font_size", 20)
 		b.focus_mode = Control.FOCUS_NONE
 		b.visible = false
 		var slot := i
@@ -141,8 +143,8 @@ func _build_hud() -> void:
 	bag_button.custom_minimum_size = Vector2(130, 64)
 	bag_button.anchor_left = 1.0
 	bag_button.anchor_right = 1.0
-	bag_button.offset_left = -146
-	bag_button.offset_right = -16
+	bag_button.offset_left = -186
+	bag_button.offset_right = -56
 	bag_button.offset_top = 150
 	bag_button.offset_bottom = 214
 	bag_button.pressed.connect(toggle_inventory)
@@ -211,7 +213,7 @@ func _build_dialog() -> void:
 	v.add_child(dialog_buttons)
 
 
-func _build_select() -> void:
+func _build_select(has_save: bool = false) -> void:
 	select_panel = PanelContainer.new()
 	select_panel.add_theme_stylebox_override("panel", _panel_style())
 	select_panel.set_anchors_preset(Control.PRESET_CENTER)
@@ -221,18 +223,28 @@ func _build_select() -> void:
 	select_panel.anchor_bottom = 0.5
 	select_panel.offset_left = -300
 	select_panel.offset_right = 300
-	select_panel.offset_top = -220
-	select_panel.offset_bottom = 220
+	select_panel.offset_top = -300
+	select_panel.offset_bottom = 300
 	add_child(select_panel)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	select_panel.add_child(v)
 	var title := Label.new()
-	title.text = "Crônicas do Eclipse — Criar personagem"
-	title.add_theme_font_size_override("font_size", 24)
+	title.text = "Crônicas do Eclipse"
+	title.add_theme_font_size_override("font_size", 28)
 	v.add_child(title)
+	if has_save:
+		var cont := Button.new()
+		cont.text = "Continuar personagem salvo"
+		cont.custom_minimum_size.y = 90
+		cont.pressed.connect(func():
+			select_panel.visible = false
+			continue_chosen.emit())
+		v.add_child(cont)
 	var note := Label.new()
-	note.text = "Qualquer classe pode ser combinada com qualquer clã."
+	note.text = "Novo personagem (substitui o salvo). Qualquer classe combina com qualquer clã." if has_save \
+		else "Criar personagem. Qualquer classe combina com qualquer clã."
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD
 	v.add_child(note)
 
 	var class_opt := OptionButton.new()

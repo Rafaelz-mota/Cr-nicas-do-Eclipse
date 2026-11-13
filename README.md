@@ -12,6 +12,7 @@ MMORPG 3D anime, original, para **Android e PC**. Câmera superior inclinada (2.
 - 4 classes e 3 clãs de demonstração; **qualquer classe combina com qualquer clã**.
 - Monstros, NPCs, missões em cadeia, itens e raridades 100% orientados a dados (`client/data/*.json`).
 - Inventário com pilhas, equipamento, durabilidade, reparo, amplificação +0 a +15 (falha nunca destrói o item), 7 raridades.
+- **Salvamento local** do personagem (nível, XP, Gold, itens, equipamento, missões): autosave a cada 20 s, ao subir de nível, ao entregar missão e ao fechar/pausar o app. Botão "Continuar" na tela inicial.
 - Testes automatizados e workflow de validação no GitHub Actions.
 
 ## Controles

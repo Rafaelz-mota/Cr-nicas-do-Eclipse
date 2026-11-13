@@ -41,6 +41,12 @@ Duas árvores independentes: habilidades da **classe** e técnicas do **clã** (
 
 Metas de catálogo (18 habilidades por classe; 1+5+3+1 por clã; 30 clãs) são **conteúdo futuro**: hoje há 4 classes com 2 habilidades e 3 clãs com 1 técnica cada, só para provar a estrutura.
 
+## Salvamento (v0.2.0)
+
+`CharacterData.to_dict()` / `from_dict()` serializam o personagem inteiro e `SaveService` grava em `user://save_character.json` (escrita atômica: arquivo temporário + substituição). Ao carregar, tudo é validado contra os dados do jogo: classe/clã inexistentes rejeitam o save; itens desconhecidos são descartados; nível, Gold, pilhas, amplificação e durabilidade são limitados aos máximos; uids novos nunca repetem os carregados.
+
+**Limite conhecido:** é salvamento local e o jogador pode editar o arquivo. É uma etapa intermediária; o salvamento autoritativo (anti-trapaça) será do servidor, reaproveitando o mesmo `to_dict`/`from_dict`.
+
 ## Segurança e persistência (plano)
 
 - Contas: ASP.NET Core Identity, senhas com hash (Argon2/PBKDF2), tokens de curta duração. **Nenhum segredo no repositório** (`.gitignore` cobre keystores e `.env`).

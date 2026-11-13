@@ -29,9 +29,16 @@ func to_dict() -> Dictionary:
 	return {"uid": uid, "item_id": item_id, "count": count, "enhance": enhance, "durability": durability, "enchants": enchants.duplicate(true)}
 
 
+## Garante que novos uids nunca repitam um uid já carregado de um salvamento.
+static func register_uid(uid: String) -> void:
+	if uid.begins_with("i") and uid.substr(1).is_valid_int():
+		_uid_counter = maxi(_uid_counter, int(uid.substr(1)))
+
+
 static func from_dict(d: Dictionary) -> ItemInstance:
 	var inst := ItemInstance.new()
 	inst.uid = str(d.get("uid", ""))
+	register_uid(inst.uid)
 	inst.item_id = str(d.get("item_id", ""))
 	inst.count = int(d.get("count", 1))
 	inst.enhance = int(d.get("enhance", 0))

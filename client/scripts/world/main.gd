@@ -13,6 +13,7 @@ var character: CharacterData
 var spawn_points: Array = []  # {"id": String, "pos": Vector3}
 var _dialog_npc: NpcActor = null
 var _smoke_mode := false
+var _save_enabled := true
 
 
 func _ready() -> void:
@@ -28,8 +29,10 @@ func _ready() -> void:
 
 	hud = Hud.new()
 	add_child(hud)
-	hud.setup(data)
-	hud.character_chosen.connect(_start_game)
+	_save_enabled = not ("--smoke" in OS.get_cmdline_user_args())
+	hud.setup(data, _save_enabled and SaveService.exists())
+	hud.character_chosen.connect(func(cls, clan): _start_game(CharacterData.create_new(data, "Viajante", cls, clan)))
+	hud.continue_chosen.connect(_on_continue)
 	hud.skill_pressed.connect(_on_skill_pressed)
 	hud.interact_pressed.connect(_on_interact)
 	hud.dialog_action.connect(_on_dialog_action)
@@ -49,7 +52,7 @@ func _ready() -> void:
 	if "--smoke" in OS.get_cmdline_user_args():
 		_smoke_mode = true
 		hud.select_panel.visible = false
-		_start_game("vanguarda", "veu_cinzento")
+		_start_game(CharacterData.create_new(data, "Viajante", "vanguarda", "veu_cinzento"))
 		_run_smoke()
 
 
@@ -82,7 +85,7 @@ func _build_ground() -> void:
 	body.add_child(col)
 	var mesh := MeshInstance3D.new()
 	var plane := PlaneMesh.new()
-	plane.size = Vector2(ARENA_HALF * 2.0, ARENA_HALF * 2.0)
+	plane.size = Vector2(ARENA_HALF * 8.0, ARENA_HALF * 8.0)  # bem maior que a área jogável: sem "buraco" nas bordas da tela
 	mesh.mesh = plane
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color = Color("#3d6b46")
@@ -174,8 +177,30 @@ func _add_rock(pos: Vector3, scale_f: float) -> void:
 	add_child(body)
 
 
-func _start_game(class_id: String, clan_id: String) -> void:
-	character = CharacterData.create_new(data, "Viajante", class_id, clan_id)
+func _on_continue() -> void:
+	var loaded := SaveService.load_character(data)
+	if loaded == null:
+		# Save ausente ou inválido: não deixa o jogador preso numa tela vazia.
+		hud.select_panel.visible = true
+		hud.toast("Não foi possível carregar o salvamento. Crie um novo personagem.")
+		return
+	_start_game(loaded)
+	hud.toast("Personagem carregado.")
+
+
+func _save_now() -> void:
+	if _save_enabled and character != null:
+		SaveService.save(character)
+
+
+func _notification(what: int) -> void:
+	# Fechar o jogo no PC ou mandá-lo para segundo plano no Android também salva.
+	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED:
+		_save_now()
+
+
+func _start_game(p_character: CharacterData) -> void:
+	character = p_character
 	player = PlayerActor.new()
 	add_child(player)
 	player.setup(data, character)
@@ -183,7 +208,13 @@ func _start_game(class_id: String, clan_id: String) -> void:
 	player.hit_dealt.connect(func(_t, _r): _refresh_bag_if_open())
 	player.skill_failed.connect(_on_skill_failed)
 	player.died.connect(_on_player_died)
-	character.leveled_up.connect(func(lv): hud.toast("Nível %d!" % lv); _refresh_bag_if_open())
+	character.leveled_up.connect(func(lv): hud.toast("Nível %d!" % lv); _refresh_bag_if_open(); _save_now())
+	var autosave := Timer.new()
+	autosave.wait_time = 20.0
+	autosave.autostart = true
+	autosave.timeout.connect(_save_now)
+	add_child(autosave)
+	_save_now()
 	hud.joystick_moved.connect(func(v): player.touch_move = v)
 	hud.configure_skill_buttons(character)
 
@@ -300,6 +331,7 @@ func _on_dialog_action(action: String, quest_id: String) -> void:
 			var summary := character.grant_rewards(rewards)
 			player.refresh_stats()
 			hud.toast("Missão concluída! +%d XP, +%d Gold" % [summary["xp"], summary["gold"]])
+			_save_now()
 			_open_dialog(_dialog_npc)
 		_:
 			hud.hide_dialog()
