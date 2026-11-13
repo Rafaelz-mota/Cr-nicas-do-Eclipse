@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "_nota": "kind: principal, secundaria, cla, guilda, secreta, dinamica. Cadeias via requires_quest. Campo consequences reservado para escolhas futuras.",
+  "quests": [
+    {
+      "id": "q_primeiros_passos", "kind": "principal", "title": "Primeiros Passos", "giver": "maren_guardia",
+      "description": "Elimine 3 Gosmantes Musgosos que rondam a clareira.",
+      "requires_level": 1, "requires_quest": "",
+      "objectives": [ { "type": "kill", "target": "gosmante_musgoso", "count": 3 } ],
+      "rewards": { "xp": 120, "gold": 50, "items": [ { "id": "pocao_vida_pequena", "count": 2 } ] },
+      "consequences": []
+    },
+    {
+      "id": "q_trilha_cinzenta", "kind": "principal", "title": "A Trilha Cinzenta", "giver": "maren_guardia",
+      "description": "Dois Lobos Cinzentos cercam a trilha. Afaste-os.",
+      "requires_level": 1, "requires_quest": "q_primeiros_passos",
+      "objectives": [ { "type": "kill", "target": "lobo_cinzento", "count": 2 } ],
+      "rewards": { "xp": 300, "gold": 120, "items": [ { "id": "botas_viajante", "count": 1 } ] },
+      "consequences": []
+    }
+  ]
+}

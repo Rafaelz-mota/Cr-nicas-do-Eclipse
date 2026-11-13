@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "rarities": [
+    { "id": "comum", "name": "Comum", "order": 0, "color": "#b8b8b8", "max_enchants": 0 },
+    { "id": "incomum", "name": "Incomum", "order": 1, "color": "#6fd36f", "max_enchants": 1 },
+    { "id": "raro", "name": "Raro", "order": 2, "color": "#4aa3ff", "max_enchants": 2 },
+    { "id": "epico", "name": "Épico", "order": 3, "color": "#b266ff", "max_enchants": 3 },
+    { "id": "lendario", "name": "Lendário", "order": 4, "color": "#ffa53a", "max_enchants": 4 },
+    { "id": "mitico", "name": "Mítico", "order": 5, "color": "#ff4d6d", "max_enchants": 5 },
+    { "id": "unico", "name": "Único", "order": 6, "color": "#fff1a8", "max_enchants": 6 }
+  ]
+}

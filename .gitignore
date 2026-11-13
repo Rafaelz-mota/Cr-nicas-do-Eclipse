@@ -1,0 +1,31 @@
+# Godot
+client/.godot/
+client/.import/
+client/*.translation
+client/export_credentials.cfg
+*.tmp
+
+# Builds
+build/
+*.apk
+*.aab
+*.exe
+*.pck
+
+# Segredos (NUNCA versionar)
+*.keystore
+*.jks
+.env
+.env.*
+secrets/
+appsettings.Production.json
+
+# Servidor (.NET)
+server/**/bin/
+server/**/obj/
+
+# Sistema/Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

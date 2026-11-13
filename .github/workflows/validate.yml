@@ -1,0 +1,46 @@
+name: Validar projeto
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  validar:
+    name: Testes e verificação jogável
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validar JSON dos dados
+        run: |
+          for f in client/data/*.json; do
+            python3 -m json.tool "$f" > /dev/null || { echo "JSON inválido: $f"; exit 1; }
+          done
+          echo "Todos os JSON são válidos."
+
+      - name: Baixar Godot ${{ env.GODOT_VERSION }}
+        run: |
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          chmod +x "Godot_v${GODOT_VERSION}-stable_linux.x86_64"
+          echo "GODOT=$PWD/Godot_v${GODOT_VERSION}-stable_linux.x86_64" >> "$GITHUB_ENV"
+
+      - name: Importar projeto
+        run: |
+          "$GODOT" --headless --path client --import || true
+          "$GODOT" --headless --path client --import
+
+      - name: Testes unitários
+        run: '"$GODOT" --headless --path client -s res://tests/run_tests.gd'
+
+      - name: Verificação jogável (smoke)
+        run: |
+          "$GODOT" --headless --path client -- --smoke 2>&1 | tee smoke.log
+          grep -q "^SMOKE:" smoke.log
+          if grep -q "SCRIPT ERROR" smoke.log; then echo "Erros de script no smoke"; exit 1; fi

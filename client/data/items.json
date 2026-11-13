@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "_nota": "type: weapon, armor, consumable, material. Sete raridades em rarities.json. Amplificação +0..+15 em balance.json.",
+  "items": [
+    { "id": "espada_treino", "name": "Espada de Treino", "type": "weapon", "slot": "arma", "weapon_type": "espada", "rarity": "comum", "level_req": 1, "stats": { "attack": 6 }, "durability_max": 40, "value": 20 },
+    { "id": "cajado_aprendiz", "name": "Cajado de Aprendiz", "type": "weapon", "slot": "arma", "weapon_type": "cajado", "rarity": "comum", "level_req": 1, "stats": { "magic_attack": 7 }, "durability_max": 40, "value": 20 },
+    { "id": "arco_curto", "name": "Arco Curto", "type": "weapon", "slot": "arma", "weapon_type": "arco", "rarity": "comum", "level_req": 1, "stats": { "attack": 5 }, "durability_max": 40, "value": 20 },
+    { "id": "peitoral_couro", "name": "Peitoral de Couro", "type": "armor", "slot": "peito", "rarity": "comum", "level_req": 1, "stats": { "defense": 4, "hp": 10 }, "durability_max": 50, "value": 25 },
+    { "id": "botas_viajante", "name": "Botas do Viajante", "type": "armor", "slot": "botas", "rarity": "incomum", "level_req": 2, "stats": { "defense": 2, "hp": 15 }, "durability_max": 50, "value": 60 },
+    { "id": "pocao_vida_pequena", "name": "Poção de Vida Pequena", "type": "consumable", "rarity": "comum", "level_req": 1, "stackable": true, "max_stack": 20, "effect": { "heal": 60 }, "value": 10 },
+    { "id": "gosma_musgosa", "name": "Gosma Musgosa", "type": "material", "rarity": "comum", "level_req": 1, "stackable": true, "max_stack": 99, "value": 2 },
+    { "id": "presa_cinzenta", "name": "Presa Cinzenta", "type": "material", "rarity": "incomum", "level_req": 1, "stackable": true, "max_stack": 99, "value": 8 }
+  ]
+}

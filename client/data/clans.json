@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "_nota": "Catálogo inicial (3 clãs de demonstração, todos originais). Meta: 30 clãs, cada um com 1 passiva, 5 técnicas, 3 evoluídas e 1 despertar. Qualquer classe combina com qualquer clã.",
+  "clans": [
+    {
+      "id": "veu_cinzento",
+      "name": "Clã Véu Cinzento",
+      "theme": "Percepção sobrenatural: enxergar o que o mundo esconde",
+      "passive": { "crit_chance_add": 0.05 },
+      "techniques": ["olhar_do_veu"]
+    },
+    {
+      "id": "brasa_lirio",
+      "name": "Clã Brasa-Lírio",
+      "theme": "Energia elemental: flores que ardem em brasa",
+      "passive": { "magic_damage_mult": 1.08, "resistances": { "fogo": 0.2 } },
+      "techniques": ["florescer_em_brasa"]
+    },
+    {
+      "id": "marfim_tecelao",
+      "name": "Clã Marfim-Tecelão",
+      "theme": "Manipulação óssea: tecer escudos e lâminas de marfim",
+      "passive": { "max_hp_mult": 1.10 },
+      "techniques": ["costela_de_marfim"]
+    }
+  ]
+}

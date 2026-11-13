@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "max_level": 50,
+  "xp": { "base": 100, "exponent": 1.9 },
+  "attributes": { "points_per_level": 3 },
+  "combat": {
+    "crit_multiplier": 1.5,
+    "defense_constant": 100,
+    "min_damage": 1,
+    "mana_regen_per_sec": 2.0,
+    "hp_regen_per_sec": 1.0
+  },
+  "inventory": { "capacity": 30 },
+  "durability": { "repair_gold_per_point": 2, "loss_per_hit_taken": 1 },
+  "enhancement": {
+    "max_level": 15,
+    "stat_bonus_per_level": 0.06,
+    "on_failure": "none",
+    "table": [
+      { "to": 1, "success": 1.00, "gold": 100 },
+      { "to": 2, "success": 1.00, "gold": 400 },
+      { "to": 3, "success": 1.00, "gold": 900 },
+      { "to": 4, "success": 0.90, "gold": 1600 },
+      { "to": 5, "success": 0.85, "gold": 2500 },
+      { "to": 6, "success": 0.80, "gold": 3600 },
+      { "to": 7, "success": 0.70, "gold": 4900 },
+      { "to": 8, "success": 0.60, "gold": 6400 },
+      { "to": 9, "success": 0.50, "gold": 8100 },
+      { "to": 10, "success": 0.45, "gold": 10000 },
+      { "to": 11, "success": 0.40, "gold": 12100 },
+      { "to": 12, "success": 0.35, "gold": 14400 },
+      { "to": 13, "success": 0.30, "gold": 16900 },
+      { "to": 14, "success": 0.25, "gold": 19600 },
+      { "to": 15, "success": 0.20, "gold": 22500 }
+    ]
+  },
+  "respawn": { "monster_seconds": 10.0, "player_seconds": 3.0 }
+}

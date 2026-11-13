@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "npcs": [
+    {
+      "id": "maren_guardia", "name": "Maren, a Guardiã", "model_id": "maren_guardia", "color": "#e0a458",
+      "position": [-4.0, 0.0, 3.0],
+      "dialogue": ["O Eclipse se aproxima, viajante. Ainda há tempo de se preparar."],
+      "quests": ["q_primeiros_passos", "q_trilha_cinzenta"]
+    }
+  ]
+}

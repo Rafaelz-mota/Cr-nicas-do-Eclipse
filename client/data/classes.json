@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "_nota": "Catálogo inicial (4 classes de demonstração). Meta de catálogo: 18 habilidades por classe, a balancear.",
+  "classes": [
+    {
+      "id": "vanguarda",
+      "name": "Vanguarda",
+      "role": "Combatente corpo a corpo resistente",
+      "weapon_types": ["espada"],
+      "base_attributes": { "forca": 8, "destreza": 4, "inteligencia": 2, "vitalidade": 8, "espirito": 3 },
+      "growth": { "forca": 1.5, "destreza": 0.7, "inteligencia": 0.3, "vitalidade": 1.5, "espirito": 0.4 },
+      "skills": ["golpe_firme", "investida_ruptura"],
+      "starter_items": ["espada_treino", "peitoral_couro", "pocao_vida_pequena"]
+    },
+    {
+      "id": "arcanista",
+      "name": "Arcanista",
+      "role": "Conjurador de dano mágico à distância",
+      "weapon_types": ["cajado"],
+      "base_attributes": { "forca": 2, "destreza": 3, "inteligencia": 10, "vitalidade": 4, "espirito": 7 },
+      "growth": { "forca": 0.3, "destreza": 0.5, "inteligencia": 1.8, "vitalidade": 0.8, "espirito": 1.2 },
+      "skills": ["raio_runico", "chama_orbital"],
+      "starter_items": ["cajado_aprendiz", "peitoral_couro", "pocao_vida_pequena"]
+    },
+    {
+      "id": "andarilho",
+      "name": "Andarilho",
+      "role": "Atirador ágil de dano físico à distância",
+      "weapon_types": ["arco"],
+      "base_attributes": { "forca": 4, "destreza": 10, "inteligencia": 2, "vitalidade": 5, "espirito": 3 },
+      "growth": { "forca": 0.6, "destreza": 1.8, "inteligencia": 0.3, "vitalidade": 1.0, "espirito": 0.5 },
+      "skills": ["flecha_certeira", "salva_dupla"],
+      "starter_items": ["arco_curto", "peitoral_couro", "pocao_vida_pequena"]
+    },
+    {
+      "id": "sentinela",
+      "name": "Sentinela",
+      "role": "Protetor com cura própria",
+      "weapon_types": ["cajado"],
+      "base_attributes": { "forca": 3, "destreza": 3, "inteligencia": 6, "vitalidade": 7, "espirito": 9 },
+      "growth": { "forca": 0.5, "destreza": 0.5, "inteligencia": 1.0, "vitalidade": 1.3, "espirito": 1.5 },
+      "skills": ["cajado_luminoso", "luz_restauradora"],
+      "starter_items": ["cajado_aprendiz", "peitoral_couro", "pocao_vida_pequena"]
+    }
+  ]
+}
