@@ -8,7 +8,9 @@
 
 ## Estado honesto
 
-O workflow `android-apk.yml` **foi escrito, mas ainda não foi executado**. Nenhum APK foi gerado até agora. O ambiente onde foi desenvolvido não tem Android SDK nem templates de exportação. Na primeira execução podem surgir ajustes (versão do build-tools/SDK exigida pelo Godot 4.7, caminhos). Se falhar, abra o log da execução e envie o erro para correção.
+O workflow `android-apk.yml` **foi executado no GitHub e gerou um APK debug** (~28 MB, assinado, artefato `cronicas-do-eclipse-apk-debug`). A primeira tentativa falhou por causa de uma ação auxiliar do Android SDK; foi corrigida usando o SDK que já vem no runner, e a segunda execução passou.
+
+**O que NÃO foi verificado:** o APK nunca foi instalado nem aberto em um aparelho. Não se sabe ainda se abre, como ficam HUD/joystick no toque, nem o desempenho. Se algo falhar ao instalar ou abrir, envie o erro ou uma descrição/captura de tela.
 
 ## Detalhes
 

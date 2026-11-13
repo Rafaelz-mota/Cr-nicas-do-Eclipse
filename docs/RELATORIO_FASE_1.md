@@ -15,8 +15,9 @@ Godot **4.7.2 estável** (a mais recente estável encontrada nas tags oficiais),
 | Testes unitários (`tests/run_tests.gd`) | **38 testes, 270 asserções, 0 falhas** |
 | Verificação jogável `--smoke` (cena real, 6 monstros, mata um monstro com a habilidade básica, confere XP e Gold) | **Passou**, sem erros de script |
 | Sintaxe YAML dos 2 workflows | Válida (apenas sintaxe) |
-| Workflow `validate.yml` no GitHub | **Ainda não executado** (roda no primeiro push) |
-| Workflow `android-apk.yml` | **Não executado. Nenhum APK foi gerado.** |
+| Workflow `validate.yml` no GitHub | **Passou** (run 43492212154: JSON, testes e smoke, ~20s) |
+| Workflow `android-apk.yml` | 1ª execução **falhou** (ação `setup-android`); corrigido; 2ª execução (run 43493081274) **passou e gerou o artefato** `cronicas-do-eclipse-apk-debug`, ~28 MB |
+| APK instalado/aberto em aparelho | **Não testado** |
 
 Um bug real foi encontrado e corrigido pelo smoke: a classe `VirtualJoystick` colidia com uma classe nativa do Godot 4.7; foi renomeada para `TouchJoystick`.
 
@@ -36,12 +37,12 @@ Um bug real foi encontrado e corrigido pelo smoke: a classe `VirtualJoystick` co
 13. NPC e missões em cadeia (2 missões).
 14-15. Inventário, equipamento, durabilidade/reparo, amplificação +0..+15, 7 raridades.
 16. Testes automatizados.
-17. Workflow de validação.
-18. Preparação do APK: `export_presets.cfg` + `android-apk.yml` + guia.
+17. Workflow de validação (executado com sucesso no GitHub).
+18. APK: `export_presets.cfg` + `android-apk.yml` + guia; APK debug gerado pelo CI.
 
 ## Limitações e pendências (sem maquiagem)
 
-- **APK não gerado.** O workflow nunca rodou; pode precisar de ajustes de versão do SDK/build-tools na primeira execução.
+- **APK gerado pelo CI, mas nunca instalado em aparelho.** Não se sabe se abre e roda corretamente no celular.
 - **Aparência não verificada visualmente.** O ambiente não tem GPU/tela: nenhum print foi tirado. A lógica foi testada; layout do HUD, câmera e toque no celular **nunca foram vistos** e podem precisar de ajustes.
 - **Visual provisório**: cápsulas coloridas. Sem modelos anime, rostos, animações; efeitos de partículas mínimos.
 - **Sem servidor, banco, login ou multiplayer.** Só a estrutura planejada. Salvamento permanente não existe ainda (há `ItemInstance.to_dict/from_dict` como base).
@@ -53,6 +54,6 @@ Um bug real foi encontrado e corrigido pelo smoke: a classe `VirtualJoystick` co
 
 ## Próxima etapa recomendada
 
-1. Rodar `validate.yml` e `android-apk.yml` no GitHub e corrigir o que falhar; instalar o APK no seu celular e reportar o que vê (HUD, toque, desempenho).
+1. Instalar o APK (GitHub > Actions > "Gerar APK Android (debug)" > última execução > Artifacts) no seu celular e reportar o que vê (abre? HUD, toque, desempenho).
 2. Com base nisso, ajustar controles/HUD mobile.
 3. Só então: esqueleto do servidor .NET + login + salvamento, e expandir catálogo (mais classes, clãs, habilidades).
