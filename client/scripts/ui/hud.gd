@@ -32,6 +32,7 @@ var dialog_panel: PanelContainer
 var dialog_text: Label
 var dialog_buttons: VBoxContainer
 var select_panel: PanelContainer
+var game_root: Control
 var _toast_tween: Tween
 
 
@@ -41,10 +42,26 @@ func setup(p_data: GameDataStore, p_has_save: bool = false) -> void:
 	_build_inventory()
 	_build_dialog()
 	_build_select(p_has_save)
+	_apply_theme()
+
+
+## Fonte maior para telas de celular (o padrão do Godot, 16 px, fica pequeno).
+func _apply_theme() -> void:
+	var t := Theme.new()
+	t.default_font_size = 22
+	for c in [game_root, inv_panel, dialog_panel, select_panel]:
+		c.theme = t
+
+
+## Mostra o HUD de jogo (escondido enquanto o menu inicial está aberto).
+func show_game_ui() -> void:
+	game_root.visible = true
 
 
 func _build_hud() -> void:
 	var root := Control.new()
+	game_root = root
+	root.visible = false
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(root)
@@ -114,6 +131,7 @@ func _build_hud() -> void:
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(150, 150)
 		b.add_theme_font_size_override("font_size", 20)
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART  # nomes longos quebram linha em vez de alargar o botão
 		b.focus_mode = Control.FOCUS_NONE
 		b.visible = false
 		var slot := i
@@ -221,10 +239,12 @@ func _build_select(has_save: bool = false) -> void:
 	select_panel.anchor_right = 0.5
 	select_panel.anchor_top = 0.5
 	select_panel.anchor_bottom = 0.5
-	select_panel.offset_left = -300
-	select_panel.offset_right = 300
-	select_panel.offset_top = -300
-	select_panel.offset_bottom = 300
+	select_panel.offset_left = -400
+	select_panel.offset_right = 400
+	select_panel.offset_top = -10
+	select_panel.offset_bottom = 10
+	select_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	select_panel.grow_vertical = Control.GROW_DIRECTION_BOTH  # altura = conteúdo, centralizado
 	add_child(select_panel)
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
@@ -239,6 +259,7 @@ func _build_select(has_save: bool = false) -> void:
 		cont.custom_minimum_size.y = 90
 		cont.pressed.connect(func():
 			select_panel.visible = false
+			show_game_ui()
 			continue_chosen.emit())
 		v.add_child(cont)
 	var note := Label.new()
@@ -251,12 +272,16 @@ func _build_select(has_save: bool = false) -> void:
 	for cid in data.classes:
 		class_opt.add_item("%s — %s" % [data.classes[cid]["name"], data.classes[cid]["role"]])
 		class_opt.set_item_metadata(class_opt.item_count - 1, cid)
-	class_opt.custom_minimum_size.y = 64
 	var clan_opt := OptionButton.new()
 	for kid in data.clans:
 		clan_opt.add_item("%s — %s" % [data.clans[kid]["name"], data.clans[kid]["theme"]])
 		clan_opt.set_item_metadata(clan_opt.item_count - 1, kid)
-	clan_opt.custom_minimum_size.y = 64
+	for opt in [class_opt, clan_opt]:
+		opt.custom_minimum_size.y = 72
+		opt.clip_text = true  # texto longo é cortado em vez de alargar o painel
+		var popup: PopupMenu = opt.get_popup()
+		popup.add_theme_font_size_override("font_size", 24)
+		popup.add_theme_constant_override("v_separation", 22)  # linhas altas: fáceis de tocar
 	var l1 := Label.new()
 	l1.text = "Classe"
 	var l2 := Label.new()
@@ -270,6 +295,7 @@ func _build_select(has_save: bool = false) -> void:
 	go.custom_minimum_size.y = 80
 	go.pressed.connect(func():
 		select_panel.visible = false
+		show_game_ui()
 		character_chosen.emit(class_opt.get_item_metadata(class_opt.selected), clan_opt.get_item_metadata(clan_opt.selected)))
 	v.add_child(go)
 

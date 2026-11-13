@@ -18,7 +18,7 @@ func setup(p_def: Dictionary) -> void:
 	label.text = def["name"]
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	label.pixel_size = 0.006
-	label.font_size = 40
+	label.font_size = 64
 	label.outline_size = 8
 	label.no_depth_test = true
 	label.position.y = 2.4

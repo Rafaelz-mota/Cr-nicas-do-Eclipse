@@ -49,7 +49,7 @@ func setup(p_def: Dictionary, p_data: GameDataStore, p_spawn: Vector3) -> void:
 	label = Label3D.new()
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	label.pixel_size = 0.006
-	label.font_size = 40
+	label.font_size = 64
 	label.outline_size = 8
 	label.no_depth_test = true
 	label.position.y = 1.9 * scale_f

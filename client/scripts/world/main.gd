@@ -47,6 +47,9 @@ func _ready() -> void:
 	camera = IsoCamera.new()
 	add_child(camera)
 	camera.current = true
+	# Câmera do menu inicial: olha para a clareira (some quando o jogo começa).
+	camera.global_position = PLAYER_SPAWN + camera.offset
+	camera.look_at(PLAYER_SPAWN + Vector3(0, 1.0, 0))
 
 	# Modo de verificação automática (CI): --smoke inicia sozinho e sai.
 	if "--smoke" in OS.get_cmdline_user_args():
@@ -201,6 +204,7 @@ func _notification(what: int) -> void:
 
 func _start_game(p_character: CharacterData) -> void:
 	character = p_character
+	hud.show_game_ui()
 	player = PlayerActor.new()
 	add_child(player)
 	player.setup(data, character)
