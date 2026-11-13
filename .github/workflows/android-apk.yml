@@ -2,7 +2,7 @@ name: Gerar APK Android (debug)
 
 # Acionável pelo celular: GitHub > Actions > "Gerar APK Android (debug)" > Run workflow.
 # O APK fica em "Artifacts" na página da execução.
-# AVISO: este workflow foi escrito mas ainda NÃO foi executado. Veja docs/ANDROID_BUILD.md.
+# Veja docs/ANDROID_BUILD.md para o estado real da última execução.
 
 on:
   workflow_dispatch:
@@ -22,12 +22,12 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      - uses: android-actions/setup-android@v3
-
-      - name: Instalar componentes do Android SDK
+      - name: Instalar componentes do Android SDK (SDK já vem no runner)
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager "platform-tools" "build-tools;35.0.1" "platforms;android-35" "cmdline-tools;latest"
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          SDKM="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKM" --licenses > /dev/null || true
+          "$SDKM" "platform-tools" "build-tools;35.0.1" "platforms;android-35"
 
       - name: Baixar Godot e templates de exportação
         run: |
